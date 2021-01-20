@@ -15,7 +15,6 @@ import com.mediscreen.notes.services.NoteService;
 import io.swagger.annotations.ApiOperation;
 
 @Controller
-//@Validated
 public class NoteController {
 
     private static final Logger LOGGER = LogManager.getLogger("NoteController");

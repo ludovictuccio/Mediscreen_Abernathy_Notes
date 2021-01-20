@@ -35,7 +35,7 @@ public class NoteControllerApiRest {
 
     @ApiOperation(value = "GET all the patient's notes", notes = "Need param 'patId', the patient's id - Return response 200 or 404 not found if no notes found", response = Note.class)
     @GetMapping
-    public List<Note> getAllNotes(@RequestParam final Long patId) {
+    public List<Note> getAllPatientsNotes(@RequestParam final Long patId) {
         return noteService.getAllPatientNotes(patId);
     }
 
