@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8" />
+<title>History</title>
+<link rel="stylesheet" href="../../css/bootstrap.min.css">
+</head>
+<body>
+	<div class="container">
+		<div class="row">
+			<h2 style="width: 100%">Patient's history - All notes</h2>
+		</div>
+<!-- 		<div class="row"> -->
+<!-- 			<div class="col-6"></div> -->
+<!-- 			<div class="col-6 text-right"> -->
+<!-- 				<a href="@{/patient/medicalRecord/{patId}(patId=${note.patId})}">Return</a>&nbsp; -->
+<!-- 			</div> -->
+<!-- 		</div> -->
+		<div class="row">
+			<div class="col-6"></div>
+			<div class="col-6 text-right">
+				<a href="/patient/list">Search other patient</a>&nbsp;
+			</div>
+		</div>
+		<div class="row">
+			<a href="/note/add" class="btn btn-primary btn-sm">Add new
+				Note</a>
+		</div>
+		<div class="row">
+			<table class="table table-striped table-bordered" style="width: 100%">
+				<thead>
+					<tr>
+						<th style="width: 10%">Creation date</th>
+						<th style="width: 10%">Last updated</th>
+						<th style="width: 10%">Patient id</th>
+						<th style="width: 15%">Patient lastname</th>
+						<th style="width: 35%">Notes</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="note : ${notes}">
+						<td th:text="${note.creationDate}"></td>
+						<td th:text="${note.lastUpdateDate}"></td>
+						<td th:text="${note.patId}"></td>
+						<td th:text="${note.patientLastname}"></td>
+						<td th:text="${note.note}"></td>
+						<td style="width: 15%" class="text-center"><a
+							th:href="@{/note/update/{id}(id=${note.id})}">Edit</a>&nbsp;
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+</body>
+</html>
