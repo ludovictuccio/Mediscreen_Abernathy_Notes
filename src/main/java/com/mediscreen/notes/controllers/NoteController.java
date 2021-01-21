@@ -10,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
@@ -77,6 +78,34 @@ public class NoteController {
         }
         LOGGER.error("POST request FAILED for: /note/validate");
         return "note/add";
+    }
+
+    @ApiOperation(value = "UPDATE Note (Get)", notes = "THYMELEAF - Get a note by his id to update it. Need PathVariable with note id (String). Return response 200 or 400 bad request")
+    @GetMapping("/note/update/{id}")
+    public String showUpdateForm(@PathVariable("id") final String id,
+            final Model model) {
+        Note note = noteService.getNote(id);
+
+        if (note == null) {
+            LOGGER.error("Invalid note Id: {}", id);
+            return "redirect:/note/list";
+        }
+        model.addAttribute("note", note);
+        return "note/update";
+    }
+
+    @ApiOperation(value = "UPDATE note (post)", notes = "THYMELEAF - Update a note - Return response 200")
+    @PostMapping("/note/update/{id}")
+    public String updateNote(@PathVariable("id") final String id,
+            final Note note, final BindingResult result, final Model model) {
+        if (result.hasErrors()) {
+            LOGGER.info("POST request FAILED for: /note/update/{id}");
+            return "note/update";
+        }
+        noteService.updateNote(note, id);
+        model.addAttribute("note", note);
+        Note existingNote = noteService.getNote(id);
+        return "redirect:/note/list?patId=" + existingNote.getPatId();
     }
 
 }

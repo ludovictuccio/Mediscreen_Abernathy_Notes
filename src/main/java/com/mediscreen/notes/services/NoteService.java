@@ -28,4 +28,21 @@ public interface NoteService {
      * @return note
      */
     Note addNote(final Note note);
+
+    /**
+     * Method used to update a note, using his id.
+     *
+     * @param note
+     * @param id   the note's id
+     * @return boolean isUpdated
+     */
+    boolean updateNote(final Note note, final String id);
+
+    /**
+     * Method used to get a note with his id.
+     *
+     * @param id
+     * @return note or null
+     */
+    Note getNote(final String id);
 }

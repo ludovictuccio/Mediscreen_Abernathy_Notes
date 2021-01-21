@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -56,6 +57,18 @@ public class NoteControllerApiRest {
         }
         LOGGER.error("POST request FAILED for: /api/note");
         return new ResponseEntity<Note>(HttpStatus.BAD_REQUEST);
+    }
+
+    @ApiOperation(value = "PUT Update a note", notes = "Need Note body (with 'patId', 'patientLastname', 'note') & param String 'id' with note's id - Return response 200 Ok or 400 bad request")
+    @PutMapping
+    public ResponseEntity<Boolean> updateNote(@RequestBody final Note note,
+            @RequestParam final String id) {
+        boolean result = noteService.updateNote(note, id);
+        if (result == true) {
+            return new ResponseEntity<Boolean>(HttpStatus.OK);
+        }
+        LOGGER.error("PUT request FAILED for: /api/note");
+        return new ResponseEntity<Boolean>(HttpStatus.BAD_REQUEST);
     }
 
 }

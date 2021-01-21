@@ -26,6 +26,12 @@ public class NoteServiceImpl implements NoteService {
     private ConstraintsValidator constraintsValidator;
 
     /**
+     * Used while update note method: the number of characters allowed for the
+     * user to delete.
+     */
+    private static final int MAX_SIZE_ALLOWED_TO_DELETE = 10;
+
+    /**
      * {@inheritDoc}
      */
     @Override
@@ -66,6 +72,39 @@ public class NoteServiceImpl implements NoteService {
         note.setCreationDate(LocalDate.now());
         note.setLastUpdateDate(null);
         return noteRepository.save(note);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public boolean updateNote(final Note note, final String id) {
+        boolean isUpdated = false;
+
+        Note existingNote = noteRepository.findById(id).orElse(null);
+
+        if (existingNote == null) {
+            LOGGER.error("Unknow note with id: {}", id);
+            return isUpdated;
+        }
+        // Fast check that note is added, and note deleted
+        // allowed to deleted errors (max 10 characters)
+        if (note.getNote().length() < (existingNote.getNote().length()
+                - MAX_SIZE_ALLOWED_TO_DELETE)) {
+            LOGGER.error("Notes must be added, no deleted");
+            return isUpdated;
+        }
+        existingNote.setLastUpdateDate(LocalDate.now());
+        existingNote.setNote(note.getNote());
+        noteRepository.save(existingNote);
+        isUpdated = true;
+        return isUpdated;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public Note getNote(final String id) {
+        return noteRepository.findById(id).orElse(null);
     }
 
 }
