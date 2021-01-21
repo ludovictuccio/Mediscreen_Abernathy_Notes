@@ -9,10 +9,8 @@ import javax.validation.ValidatorFactory;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import com.mediscreen.notes.domain.Note;
-import com.mediscreen.notes.repository.NoteRepository;
 
 /**
  * This class is used to valid constraints entities.
@@ -23,9 +21,6 @@ public class ConstraintsValidator {
 
     private static final Logger LOGGER = LogManager
             .getLogger("ConstraintsValidator");
-
-    @Autowired
-    private NoteRepository noteRepository;
 
     /**
      * Method used to validate Note constraints.
@@ -48,31 +43,6 @@ public class ConstraintsValidator {
             return null;
         }
         return note;
-    }
-
-    /**
-     * Method used to check if the association between patient's id and his
-     * lastname entered is correct.
-     *
-     * @param patId
-     * @param lastName
-     * @return boolean isExistingPatient
-     */
-    public boolean checkExistingPatient(final Long patId,
-            final String lastName) {
-        boolean isExistingPatient = false;
-
-        Note note = noteRepository.findFirstNoteByPatId(patId);
-        if (note == null) {
-            LOGGER.info("Please check existing patient id");
-            return isExistingPatient;
-        }
-        if (!note.getPatientLastname().toUpperCase()
-                .equals(lastName.toUpperCase())) {
-            return isExistingPatient;
-        }
-        isExistingPatient = true;
-        return isExistingPatient;
     }
 
 }

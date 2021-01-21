@@ -43,15 +43,6 @@ public class NoteController {
                 model);
     }
 
-//    @GetMapping("/patient/medicalRecord/{patId}")
-//    public ModelAndView returnMedicalRecordPage(
-//            @PathVariable("patId") final String patId, final ModelMap model) {
-//        LOGGER.info("controller model and map");
-//        model.addAttribute("patId", patId);
-//        return new ModelAndView(
-//                "redirect:http://localhost:8081/patient/medicalRecord", model);
-//    }
-
     @ApiOperation(value = "ADD a Note (get)", notes = "THYMELEAF - Add new patient's note")
     @GetMapping("/note/add")
     public String addNote(final Model model) {

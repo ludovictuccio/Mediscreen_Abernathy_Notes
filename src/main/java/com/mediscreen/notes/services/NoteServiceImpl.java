@@ -22,9 +22,6 @@ public class NoteServiceImpl implements NoteService {
     @Autowired
     private NoteRepository noteRepository;
 
-    @Autowired
-    private ConstraintsValidator constraintsValidator;
-
     /**
      * Used while update note method: the number of characters allowed for the
      * user to delete.
@@ -61,12 +58,6 @@ public class NoteServiceImpl implements NoteService {
     public Note addNote(final Note note) {
         if (ConstraintsValidator.checkValidPatient(note) == null) {
             LOGGER.info("Constraints violated");
-            return null;
-        }
-        if (constraintsValidator.checkExistingPatient(note.getPatId(),
-                note.getPatientLastname()) == false) {
-            LOGGER.info(
-                    "This patient doesn't exists. Please verify patient's id et lastname.");
             return null;
         }
         note.setCreationDate(LocalDate.now());
