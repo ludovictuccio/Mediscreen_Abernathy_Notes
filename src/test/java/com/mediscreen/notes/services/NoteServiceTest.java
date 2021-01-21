@@ -36,6 +36,87 @@ public class NoteServiceTest {
     }
 
     @Test
+    @Tag("updateNote")
+    @DisplayName("updateNote - OK")
+    public void givenNote_whenUpdateWithValidId_thenReturnUpdated() {
+        // GIVEN
+        Note note = new Note("6006e44ba2c25a63e0623b30", date1, date1, 1L,
+                "TestNone", "a note text");
+        noteRepository.save(note);
+
+        Note noteToUpdate = new Note("6006e44ba2c25a63e0623b30", date1, date1,
+                1L, "TestNone", "NEW NOTE");
+
+        // WHEN
+        boolean result = noteService.updateNote(noteToUpdate, note.getId());
+
+        // THEN
+        assertThat(result).isTrue();
+        assertThat(noteRepository.findAll().size()).isEqualTo(1);
+        assertThat(noteRepository.findById("6006e44ba2c25a63e0623b30").get()
+                .getNote()).isEqualTo("NEW NOTE");
+    }
+
+    @Test
+    @Tag("updateNote")
+    @DisplayName("updateNote - Error - More than 10 characters deleted")
+    public void givenNote_whenUpdateWithInvalidId_thenReturnFalse() {
+        // GIVEN
+        Note note = new Note("6006e44ba2c25a63e0623b30", date1, date1, 1L,
+                "TestNone", "a note text ------------------ other");
+        noteRepository.save(note);
+
+        Note noteToUpdate = new Note("6006e44ba2c25a63e0623b30", date1, date1,
+                1L, "TestNone", "NEW NOTE");
+
+        // WHEN
+        boolean result = noteService.updateNote(noteToUpdate, note.getId());
+
+        // THEN
+        assertThat(result).isFalse();
+        assertThat(noteRepository.findAll().size()).isEqualTo(1);
+        assertThat(noteRepository.findById("6006e44ba2c25a63e0623b30").get()
+                .getNote()).isEqualTo("a note text ------------------ other");
+    }
+
+    @Test
+    @Tag("getNote")
+    @DisplayName("getNote - OK - Valid note's id")
+    public void givenNote_whenGetWithHisId_thenReturnNote() {
+        // GIVEN
+        Note note = new Note("6006e44ba2c25a63e0623b30", date1, date1, 1L,
+                "TestNone", "a note text");
+        noteRepository.save(note);
+        assertThat(noteRepository.findAll().size()).isEqualTo(1);
+
+        // WHEN
+        Note result = noteService.getNote("6006e44ba2c25a63e0623b30");
+
+        // THEN
+        assertThat(result).isNotNull();
+        assertThat(result.getPatId()).isEqualTo(1L);
+        assertThat(result.getPatientLastname()).isEqualTo("TestNone");
+        assertThat(noteRepository.findAll().size()).isEqualTo(1);
+    }
+
+    @Test
+    @Tag("getNote")
+    @DisplayName("getNote - ERROR - Invalid note's id")
+    public void givenNote_whenGetWithBadId_thenReturnNote() {
+        // GIVEN
+        Note note = new Note("6006e44ba2c25a63e0623b30", date1, date1, 1L,
+                "TestNone", "a note text");
+        noteRepository.save(note);
+        assertThat(noteRepository.findAll().size()).isEqualTo(1);
+
+        // WHEN
+        Note result = noteService.getNote("6");
+
+        // THEN
+        assertThat(result).isNull();
+    }
+
+    @Test
     @Tag("addNote")
     @DisplayName("addNote - OK")
     public void givenExistingNote_whenAddNewValidNote_thenReturnOk() {
