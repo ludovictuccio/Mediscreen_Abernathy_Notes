@@ -24,7 +24,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-@Document(collection = "notes")
+@Document(collection = "mediscreen")
 public class Note implements Serializable {
 
     private static final long serialVersionUID = 1L;
