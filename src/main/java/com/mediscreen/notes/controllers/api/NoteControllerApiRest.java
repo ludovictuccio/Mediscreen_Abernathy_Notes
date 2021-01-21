@@ -2,11 +2,18 @@ package com.mediscreen.notes.controllers.api;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -37,6 +44,18 @@ public class NoteControllerApiRest {
     @GetMapping
     public List<Note> getAllPatientsNotes(@RequestParam final Long patId) {
         return noteService.getAllPatientNotes(patId);
+    }
+
+    @ApiOperation(value = "POST Add a new patient's note", notes = "Need Note body - Return response 201 created or 400 bad request")
+    @PostMapping(consumes = { MediaType.ALL_VALUE })
+    public ResponseEntity<Note> addNote(@Valid @RequestBody final Note note) {
+        Note result = noteService.addNote(note);
+
+        if (result != null) {
+            return new ResponseEntity<Note>(HttpStatus.CREATED);
+        }
+        LOGGER.error("POST request FAILED for: /api/note");
+        return new ResponseEntity<Note>(HttpStatus.BAD_REQUEST);
     }
 
 }
