@@ -35,9 +35,6 @@ public class Note implements Serializable {
     @Field(value = "creationDate")
     private LocalDate creationDate;
 
-    @Field(value = "lastUpdateDate")
-    private LocalDate lastUpdateDate;
-
     @NotNull(message = "Patient Id can't be empty")
     @Field(value = "patId")
     private Long patId;

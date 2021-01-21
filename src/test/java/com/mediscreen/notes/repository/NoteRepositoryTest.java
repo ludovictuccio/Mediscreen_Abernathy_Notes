@@ -34,11 +34,11 @@ public class NoteRepositoryTest {
     @DisplayName("findAll - OK")
     public void givenThreeNotes_whenFindAll_thenReturnThree() {
         // GIVEN
-        Note note = new Note("6006e44ba2c25a63e0623b30", date1, date1, 1L,
-                "TestNone", "a note text");
-        Note note2 = new Note("546465456451", date2, date2, 2L,
-                "TestBorderline", "a note text");
-        Note note3 = new Note("4568468451656", date3, date3, 3L, "TestInDanger",
+        Note note = new Note("6006e44ba2c25a63e0623b30", date1, 1L, "TestNone",
+                "a note text");
+        Note note2 = new Note("546465456451", date2, 2L, "TestBorderline",
+                "a note text");
+        Note note3 = new Note("4568468451656", date3, 3L, "TestInDanger",
                 "a note text");
         historyRepository.save(note);
         historyRepository.save(note2);
@@ -56,11 +56,11 @@ public class NoteRepositoryTest {
     @DisplayName("findByPatIdOrderByCreationDateDesc - OK")
     public void givenThreeNotes_whenFindByPatIdTwo_thenReturnOne() {
         // GIVEN
-        Note note = new Note("6006e44ba2c25a63e0623b30", date1, date1, 1L,
-                "TestNone", "a note text");
-        Note note2 = new Note("546465456451", date2, date2, 2L,
-                "TestBorderline", "a note text");
-        Note note3 = new Note("4568468451656", date3, date3, 3L, "TestInDanger",
+        Note note = new Note("6006e44ba2c25a63e0623b30", date1, 1L, "TestNone",
+                "a note text");
+        Note note2 = new Note("546465456451", date2, 2L, "TestBorderline",
+                "a note text");
+        Note note3 = new Note("4568468451656", date3, 3L, "TestInDanger",
                 "a note text");
         historyRepository.save(note);
         historyRepository.save(note2);

@@ -61,7 +61,6 @@ public class NoteServiceImpl implements NoteService {
             return null;
         }
         note.setCreationDate(LocalDate.now());
-        note.setLastUpdateDate(null);
         return noteRepository.save(note);
     }
 
@@ -84,7 +83,6 @@ public class NoteServiceImpl implements NoteService {
             LOGGER.error("Notes must be added, no deleted");
             return isUpdated;
         }
-        existingNote.setLastUpdateDate(LocalDate.now());
         existingNote.setNote(note.getNote());
         noteRepository.save(existingNote);
         isUpdated = true;

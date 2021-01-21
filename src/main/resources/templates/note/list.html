@@ -32,7 +32,6 @@
 				<thead>
 					<tr>
 						<th style="width: 10%">Creation date</th>
-						<th style="width: 10%">Last updated</th>
 						<th style="width: 10%">Patient id</th>
 						<th style="width: 15%">Patient lastname</th>
 						<th style="width: 35%">Notes</th>
@@ -41,7 +40,6 @@
 				<tbody>
 					<tr th:each="note : ${notes}">
 						<td th:text="${note.creationDate}"></td>
-						<td th:text="${note.lastUpdateDate}"></td>
 						<td th:text="${note.patId}"></td>
 						<td th:text="${note.patientLastname}"></td>
 						<td th:text="${note.note}"></td>

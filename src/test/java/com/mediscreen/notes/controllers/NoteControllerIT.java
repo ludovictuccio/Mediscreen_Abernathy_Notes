@@ -64,8 +64,8 @@ public class NoteControllerIT {
     @Tag("/note/update")
     @DisplayName("Get - Update - OK")
     public void givenNote_whenUpdateWithHisId_thenReturnOk() throws Exception {
-        Note note = new Note("6006e44ba2c25a63e0623b30", date1, date1, 1L,
-                "TestNone", "a note text");
+        Note note = new Note("6006e44ba2c25a63e0623b30", date1, 1L, "TestNone",
+                "a note text");
         noteRepository.save(note);
         this.mockMvc
                 .perform(MockMvcRequestBuilders
@@ -82,8 +82,8 @@ public class NoteControllerIT {
     @DisplayName("Get - Update - Error - Bad id")
     public void givenNote_whenUpdateWithInvalidId_thenReturnBadRequest()
             throws Exception {
-        Note note = new Note("6006e44ba2c25a63e0623b30", date1, date1, 1L,
-                "TestNone", "a note text");
+        Note note = new Note("6006e44ba2c25a63e0623b30", date1, 1L, "TestNone",
+                "a note text");
         noteRepository.save(note);
         this.mockMvc
                 .perform(MockMvcRequestBuilders.get(URI_UPDATE + "/badId50"))
@@ -109,12 +109,11 @@ public class NoteControllerIT {
     @Tag("/note/validate")
     @DisplayName("Post - Validate / Add - OK")
     public void givenPatient_whenPostValidate_thenReturnOk() throws Exception {
-        Note note = new Note("6006e44ba2c25a63e0623b30", date1, date1, 1L,
-                "TestNone", "a note text");
+        Note note = new Note("6006e44ba2c25a63e0623b30", date1, 1L, "TestNone",
+                "a note text");
         noteRepository.save(note);
 
-        Note note2 = new Note("45544545", date1, date1, 1L, "TestNone",
-                "a note text");
+        Note note2 = new Note("45544545", date1, 1L, "TestNone", "a note text");
         String jsonContent = objectMapper.writeValueAsString(note2);
         this.mockMvc
                 .perform(MockMvcRequestBuilders.post(URI_POST_ADD_VALIDATE)

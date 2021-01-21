@@ -60,8 +60,8 @@ public class NoteControllerApiRestIT {
     @DisplayName("POST - Add new note - OK - 201")
     public void givenNote_whenAddNewValidNote_thenReturnCreated()
             throws Exception {
-        Note note = new Note("6006e44ba2c25a63e0623b30", date1, date1, 1L,
-                "TestNone", "a note text");
+        Note note = new Note("6006e44ba2c25a63e0623b30", date1, 1L, "TestNone",
+                "a note text");
         noteRepository.save(note);
         this.mockMvc.perform(MockMvcRequestBuilders.post(API_URI_BASE)
                 .contentType(MediaType.APPLICATION_JSON).content(
@@ -76,8 +76,8 @@ public class NoteControllerApiRestIT {
     @DisplayName("POST - Add new note - Error - 400")
     public void givenNote_whenAddInvalidNote_thenReturnBadRequest()
             throws Exception {
-        Note note = new Note("6006e44ba2c25a63e0623b30", date1, date1, 1L,
-                "TestNone", "a note text");
+        Note note = new Note("6006e44ba2c25a63e0623b30", date1, 1L, "TestNone",
+                "a note text");
         noteRepository.save(note);
         this.mockMvc.perform(MockMvcRequestBuilders.post(API_URI_BASE)
                 .contentType(MediaType.APPLICATION_JSON).content(
@@ -131,12 +131,12 @@ public class NoteControllerApiRestIT {
     @Tag("PUT")
     @DisplayName("PUT Update note - OK - 200")
     public void givenNote_whenUpdate_thenReturnOK() throws Exception {
-        Note note = new Note("6006e44ba2c25a63e0623b30", date1, date1, 1L,
-                "TestNone", "a note text");
+        Note note = new Note("6006e44ba2c25a63e0623b30", date1, 1L, "TestNone",
+                "a note text");
         noteRepository.save(note);
 
-        Note noteToUpdate = new Note("6006e44ba2c25a63e0623b30", date1, date1,
-                1L, "TestNone", "a note text - A NEW NOTE TEXT");
+        Note noteToUpdate = new Note("6006e44ba2c25a63e0623b30", date1, 1L,
+                "TestNone", "a note text - A NEW NOTE TEXT");
         String jsonContent = objectMapper.writeValueAsString(noteToUpdate);
         this.mockMvc
                 .perform(MockMvcRequestBuilders.put(API_URI_BASE)
@@ -152,12 +152,12 @@ public class NoteControllerApiRestIT {
     @DisplayName("PUT Update note - ERROR 400 - Bad id")
     public void givenNote_whenUpdateWithBadId_thenReturnBadRequest()
             throws Exception {
-        Note note = new Note("6006e44ba2c25a63e0623b30", date1, date1, 1L,
-                "TestNone", "a note text");
+        Note note = new Note("6006e44ba2c25a63e0623b30", date1, 1L, "TestNone",
+                "a note text");
         noteRepository.save(note);
 
-        Note noteToUpdate = new Note("6006e44ba2c25a63e0623b30", date1, date1,
-                1L, "TestNone", "a note text - A NEW NOTE TEXT");
+        Note noteToUpdate = new Note("6006e44ba2c25a63e0623b30", date1, 1L,
+                "TestNone", "a note text - A NEW NOTE TEXT");
         String jsonContent = objectMapper.writeValueAsString(noteToUpdate);
         this.mockMvc
                 .perform(MockMvcRequestBuilders.put(API_URI_BASE)
@@ -173,12 +173,12 @@ public class NoteControllerApiRestIT {
     @DisplayName("PUT Update note - ERROR 400 - Text deleted")
     public void givenNote_whenUpdateWithBadTextNote_thenReturnBadRequest()
             throws Exception {
-        Note note = new Note("6006e44ba2c25a63e0623b30", date1, date1, 1L,
-                "TestNone", "a note text");
+        Note note = new Note("6006e44ba2c25a63e0623b30", date1, 1L, "TestNone",
+                "a note text");
         noteRepository.save(note);
 
-        Note noteToUpdate = new Note("6006e44ba2c25a63e0623b30", date1, date1,
-                1L, "TestNone", "");
+        Note noteToUpdate = new Note("6006e44ba2c25a63e0623b30", date1, 1L,
+                "TestNone", "");
         String jsonContent = objectMapper.writeValueAsString(noteToUpdate);
         this.mockMvc
                 .perform(MockMvcRequestBuilders.put(API_URI_BASE)
