@@ -2,6 +2,8 @@ package com.mediscreen.notes.controllers.api;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.time.LocalDate;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
@@ -42,6 +44,8 @@ public class NoteControllerApiRestIT {
     @Autowired
     private ObjectMapper objectMapper;
 
+    private LocalDate date1 = LocalDate.of(2021, 01, 01);
+
     private static final String API_URI_GET_ALL_NOTES = "/api/note/all";
     private static final String API_URI_BASE = "/api/note";
 
@@ -49,6 +53,38 @@ public class NoteControllerApiRestIT {
     public void setUpPerTest() {
         mockMvc = MockMvcBuilders.webAppContextSetup(wac).build();
         noteRepository.deleteAll();
+    }
+
+    @Test
+    @Tag("/api/note")
+    @DisplayName("POST - Add new note - OK - 201")
+    public void givenNote_whenAddNewValidNote_thenReturnCreated()
+            throws Exception {
+        Note note = new Note("6006e44ba2c25a63e0623b30", date1, date1, 1L,
+                "TestNone", "a note text");
+        noteRepository.save(note);
+        this.mockMvc.perform(MockMvcRequestBuilders.post(API_URI_BASE)
+                .contentType(MediaType.APPLICATION_JSON).content(
+                        "{ \"patId\": 1, \"patientLastname\": \"TestNone\",\"note\": \"A new note text !\"}"))
+                .andExpect(status().isCreated())
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isCreated()).andReturn();
+    }
+
+    @Test
+    @Tag("/api/note")
+    @DisplayName("POST - Add new note - Error - 400")
+    public void givenNote_whenAddInvalidNote_thenReturnBadRequest()
+            throws Exception {
+        Note note = new Note("6006e44ba2c25a63e0623b30", date1, date1, 1L,
+                "TestNone", "a note text");
+        noteRepository.save(note);
+        this.mockMvc.perform(MockMvcRequestBuilders.post(API_URI_BASE)
+                .contentType(MediaType.APPLICATION_JSON).content(
+                        "{\"patId\": 4, \"patientLastname\": \"\",\"note\": \"A new note text !\"}"))
+                .andExpect(status().isBadRequest())
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isBadRequest()).andReturn();
     }
 
     @Test

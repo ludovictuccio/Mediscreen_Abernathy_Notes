@@ -6,6 +6,7 @@ import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import java.time.LocalDate;
 import java.util.List;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -28,6 +29,151 @@ public class NoteServiceTest {
     private LocalDate date1 = LocalDate.of(2021, 01, 01);
     private LocalDate date2 = LocalDate.of(2020, 01, 01);
     private LocalDate date3 = LocalDate.of(2019, 01, 01);
+
+    @BeforeEach
+    public void setUpPerTest() {
+        noteRepository.deleteAll();
+    }
+
+    @Test
+    @Tag("addNote")
+    @DisplayName("addNote - OK")
+    public void givenExistingNote_whenAddNewValidNote_thenReturnOk() {
+        // GIVEN
+        Note note = new Note("6006e44ba2c25a63e0623b30", date1, date1, 1L,
+                "TestNone", "a note text");
+        noteRepository.save(note);
+        assertThat(noteRepository.findAll().size()).isEqualTo(1);
+
+        Note newNote = new Note();
+        newNote.setPatId(1L);
+        newNote.setPatientLastname("TestNone");
+        newNote.setNote("a new note text");
+
+        // WHEN
+        Note result = noteService.addNote(newNote);
+
+        // THEN
+        assertThat(result).isNotNull();
+        assertThat(result.getPatId()).isEqualTo(1L);
+        assertThat(result.getPatientLastname()).isEqualTo("TestNone");
+        assertThat(noteRepository.findAll().size()).isEqualTo(2);
+    }
+
+    @Test
+    @Tag("addNote")
+    @DisplayName("addNote - ERROR - Empty patId")
+    public void givenEmptyPatId_whenAddNewValidNote_thenReturnOk() {
+        // GIVEN
+        Note note = new Note("6006e44ba2c25a63e0623b30", date1, date1, 1L,
+                "TestNone", "a note text");
+        noteRepository.save(note);
+        assertThat(noteRepository.findAll().size()).isEqualTo(1);
+
+        Note newNote = new Note();
+        newNote.setPatientLastname("TestNone");
+        newNote.setNote("a new note text");
+
+        // WHEN
+        Note result = noteService.addNote(newNote);
+
+        // THEN
+        assertThat(result).isNull();
+        assertThat(noteRepository.findAll().size()).isEqualTo(1);
+    }
+
+    @Test
+    @Tag("addNote")
+    @DisplayName("addNote - ERROR - Empty patient lastname")
+    public void givenEmptyLastname_whenAddNewValidNote_thenReturnOk() {
+        // GIVEN
+        Note note = new Note("6006e44ba2c25a63e0623b30", date1, date1, 1L,
+                "TestNone", "a note text");
+        noteRepository.save(note);
+        assertThat(noteRepository.findAll().size()).isEqualTo(1);
+
+        Note newNote = new Note();
+        newNote.setPatId(1L);
+        newNote.setNote("a new note text");
+
+        // WHEN
+        Note result = noteService.addNote(newNote);
+
+        // THEN
+        assertThat(result).isNull();
+        assertThat(noteRepository.findAll().size()).isEqualTo(1);
+    }
+
+    @Test
+    @Tag("addNote")
+    @DisplayName("addNote - ERROR - Empty patient note text")
+    public void givenEmptyNoteText_whenAddNewValidNote_thenReturnOk() {
+        // GIVEN
+        Note note = new Note("6006e44ba2c25a63e0623b30", date1, date1, 1L,
+                "TestNone", "a note text");
+        noteRepository.save(note);
+        assertThat(noteRepository.findAll().size()).isEqualTo(1);
+
+        Note newNote = new Note();
+        newNote.setPatId(1L);
+        newNote.setPatientLastname("TestNone");
+
+        // WHEN
+        Note result = noteService.addNote(newNote);
+
+        // THEN
+        assertThat(result).isNull();
+        assertThat(noteRepository.findAll().size()).isEqualTo(1);
+    }
+
+    @Test
+    @Tag("addNote")
+    @DisplayName("addNote - ERROR - Unknow patId")
+    public void givenNonExistantPatId_whenAddNewValidNote_thenReturnOk() {
+        // GIVEN
+        Note note = new Note("6006e44ba2c25a63e0623b30", date1, date1, 1L,
+                "TestNone", "a note text");
+        noteRepository.save(note);
+        assertThat(noteRepository.findAll().size()).isEqualTo(1);
+
+        Note newNote = new Note();
+        newNote.setPatId(111L);
+        newNote.setPatientLastname("TestNone");
+        newNote.setNote("a new note text");
+
+        // WHEN
+        Note result = noteService.addNote(newNote);
+
+        // THEN
+        assertThat(result).isNull();
+        assertThat(noteRepository.findAll().size()).isEqualTo(1);
+    }
+
+    @Test
+    @Tag("addNote")
+    @DisplayName("addNote - ERROR - PatId not attributed for patient lastname")
+    public void givenBadPatIdWithLastname_whenAddNewValidNote_thenReturnOk() {
+        // GIVEN
+        Note note = new Note("6006e44ba2c25a63e0623b30", date1, date1, 1L,
+                "TestNone", "a note text");
+        Note note2 = new Note("546465456451", date2, date2, 2L,
+                "TestBorderline", "a note text");
+        noteRepository.save(note);
+        noteRepository.save(note2);
+        assertThat(noteRepository.findAll().size()).isEqualTo(2);
+
+        Note newNote = new Note();
+        newNote.setPatId(1L);
+        newNote.setPatientLastname("TestBorderline");
+        newNote.setNote("a new note text");
+
+        // WHEN
+        Note result = noteService.addNote(newNote);
+
+        // THEN
+        assertThat(result).isNull();
+        assertThat(noteRepository.findAll().size()).isEqualTo(2);
+    }
 
     @Test
     @Tag("getAllPatientNotes")

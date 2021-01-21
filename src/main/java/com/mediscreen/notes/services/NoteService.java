@@ -21,4 +21,11 @@ public interface NoteService {
      */
     List<Note> getAllNotes();
 
+    /**
+     * Method used to add a new patient's note.
+     *
+     * @param note
+     * @return note
+     */
+    Note addNote(final Note note);
 }

@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.time.LocalDate;
 import java.util.List;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -22,6 +23,11 @@ public class NoteRepositoryTest {
     private LocalDate date1 = LocalDate.of(2021, 01, 01);
     private LocalDate date2 = LocalDate.of(2020, 01, 01);
     private LocalDate date3 = LocalDate.of(2019, 01, 01);
+
+    @BeforeEach
+    public void setUpPerTest() {
+        historyRepository.deleteAll();
+    }
 
     @Test
     @Tag("findAll")
@@ -46,8 +52,8 @@ public class NoteRepositoryTest {
     }
 
     @Test
-    @Tag("findByPatId")
-    @DisplayName("findByPatId - OK")
+    @Tag("findByPatIdOrderByCreationDateDesc")
+    @DisplayName("findByPatIdOrderByCreationDateDesc - OK")
     public void givenThreeNotes_whenFindByPatIdTwo_thenReturnOne() {
         // GIVEN
         Note note = new Note("6006e44ba2c25a63e0623b30", date1, date1, 1L,
@@ -61,9 +67,46 @@ public class NoteRepositoryTest {
         historyRepository.save(note3);
 
         // WHEN
-        List<Note> result = historyRepository.findByPatIdOrderByCreationDateDesc(2L);
+        List<Note> result = historyRepository
+                .findByPatIdOrderByCreationDateDesc(2L);
 
         // THEN
         assertThat(result.size()).isEqualTo(1);
+    }
+
+    @Test
+    @Tag("findFirstNoteByPatId")
+    @DisplayName("findFirstNoteByPatId - OK")
+    public void givenThreeNotes_whenFindFirstNoteByPatId_thenReturnNote() {
+        // GIVEN
+        Note note = new Note("6006e44ba2c25a63e0623b30", date1, date1, 1L,
+                "TestNone", "a note text");
+        Note note2 = new Note("546465456451", date2, date2, 2L,
+                "TestBorderline", "a note text");
+        Note note3 = new Note("4568468451656", date3, date3, 3L, "TestInDanger",
+                "a note text");
+        historyRepository.save(note);
+        historyRepository.save(note2);
+        historyRepository.save(note3);
+
+        // WHEN
+        Note result = historyRepository.findFirstNoteByPatId(2L);
+
+        // THEN
+        assertThat(result.getPatId()).isEqualTo(2L);
+        assertThat(result.getPatientLastname()).isEqualTo("TestBorderline");
+    }
+
+    @Test
+    @Tag("findFirstNoteByPatId")
+    @DisplayName("findFirstNoteByPatId - Error - No note with this patId")
+    public void aaaa() {
+        // GIVEN
+
+        // WHEN
+        Note result = historyRepository.findFirstNoteByPatId(2L);
+
+        // THEN
+        assertThat(result).isNull();
     }
 }
