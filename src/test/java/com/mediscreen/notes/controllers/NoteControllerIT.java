@@ -3,6 +3,8 @@ package com.mediscreen.notes.controllers;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.time.LocalDate;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
@@ -10,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -43,13 +46,48 @@ public class NoteControllerIT {
     @Autowired
     private ObjectMapper objectMapper;
 
+    private LocalDate date1 = LocalDate.of(2021, 01, 01);
+
     private static final String URI_GET_PATIENT_NOTES_LIST = "/note/list";
     private static final String URI_GET_REDIRECT_PATIENT_LIST = "/patient/list";
+    private static final String URI_GET_ADD_NOTE = "/note/add";
+    private static final String URI_POST_ADD_VALIDATE = "/note/validate";
 
     @BeforeEach
     public void setUpPerTest() {
         mockMvc = MockMvcBuilders.webAppContextSetup(wac).build();
         noteRepository.deleteAll();
+    }
+
+    @Test
+    @Tag("/note/add")
+    @DisplayName("Get - Add  note- OK")
+    public void givenGetMapping_whenAddNote_thenReturnOk() throws Exception {
+        this.mockMvc
+                .perform(MockMvcRequestBuilders.get(URI_GET_ADD_NOTE)
+                        .contentType(APPLICATION_JSON))
+                .andExpect(status().isOk()).andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.model().hasNoErrors())
+                .andReturn();
+    }
+
+    @Test
+    @Tag("/note/validate")
+    @DisplayName("Post - Validate / Add - OK")
+    public void givenPatient_whenPostValidate_thenReturnOk() throws Exception {
+        Note note = new Note("6006e44ba2c25a63e0623b30", date1, date1, 1L,
+                "TestNone", "a note text");
+        noteRepository.save(note);
+
+        Note note2 = new Note("45544545", date1, date1, 1L, "TestNone",
+                "a note text");
+        String jsonContent = objectMapper.writeValueAsString(note2);
+        this.mockMvc
+                .perform(MockMvcRequestBuilders.post(URI_POST_ADD_VALIDATE)
+                        .contentType(MediaType.ALL).content(jsonContent))
+                .andExpect(status().isOk()).andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isOk()).andReturn();
     }
 
     @Test
