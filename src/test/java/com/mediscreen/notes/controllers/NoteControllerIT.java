@@ -52,11 +52,44 @@ public class NoteControllerIT {
     private static final String URI_GET_REDIRECT_PATIENT_LIST = "/patient/list";
     private static final String URI_GET_ADD_NOTE = "/note/add";
     private static final String URI_POST_ADD_VALIDATE = "/note/validate";
+    private static final String URI_UPDATE = "/note/update";
 
     @BeforeEach
     public void setUpPerTest() {
         mockMvc = MockMvcBuilders.webAppContextSetup(wac).build();
         noteRepository.deleteAll();
+    }
+
+    @Test
+    @Tag("/note/update")
+    @DisplayName("Get - Update - OK")
+    public void givenNote_whenUpdateWithHisId_thenReturnOk() throws Exception {
+        Note note = new Note("6006e44ba2c25a63e0623b30", date1, date1, 1L,
+                "TestNone", "a note text");
+        noteRepository.save(note);
+        this.mockMvc
+                .perform(MockMvcRequestBuilders
+                        .get(URI_UPDATE + "/6006e44ba2c25a63e0623b30"))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(
+                        MockMvcResultMatchers.model().attributeExists("note"))
+                .andExpect(MockMvcResultMatchers.view().name("note/update"))
+                .andExpect(MockMvcResultMatchers.status().isOk()).andReturn();
+    }
+
+    @Test
+    @Tag("/note/update")
+    @DisplayName("Get - Update - Error - Bad id")
+    public void givenNote_whenUpdateWithInvalidId_thenReturnBadRequest()
+            throws Exception {
+        Note note = new Note("6006e44ba2c25a63e0623b30", date1, date1, 1L,
+                "TestNone", "a note text");
+        noteRepository.save(note);
+        this.mockMvc
+                .perform(MockMvcRequestBuilders.get(URI_UPDATE + "/badId50"))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.redirectedUrl("/note/list"))
+                .andReturn();
     }
 
     @Test

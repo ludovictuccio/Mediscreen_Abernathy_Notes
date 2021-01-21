@@ -10,6 +10,8 @@ import com.mediscreen.notes.domain.Note;
 @Repository
 public interface NoteRepository extends MongoRepository<Note, String> {
 
+    // @Query("SELECT n FROM Note n WHERE n.patId = ? ORDER BY DESC
+    // creationDate")
     List<Note> findByPatIdOrderByCreationDateDesc(final Long patId);
 
     Note findFirstNoteByPatId(final Long patId);
