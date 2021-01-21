@@ -126,4 +126,67 @@ public class NoteControllerApiRestIT {
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(status().isNotFound()).andReturn();
     }
+
+    @Test
+    @Tag("PUT")
+    @DisplayName("PUT Update note - OK - 200")
+    public void givenNote_whenUpdate_thenReturnOK() throws Exception {
+        Note note = new Note("6006e44ba2c25a63e0623b30", date1, date1, 1L,
+                "TestNone", "a note text");
+        noteRepository.save(note);
+
+        Note noteToUpdate = new Note("6006e44ba2c25a63e0623b30", date1, date1,
+                1L, "TestNone", "a note text - A NEW NOTE TEXT");
+        String jsonContent = objectMapper.writeValueAsString(noteToUpdate);
+        this.mockMvc
+                .perform(MockMvcRequestBuilders.put(API_URI_BASE)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(jsonContent)
+                        .param("id", "6006e44ba2c25a63e0623b30"))
+                .andExpect(status().isOk()).andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isOk()).andReturn();
+    }
+
+    @Test
+    @Tag("PUT")
+    @DisplayName("PUT Update note - ERROR 400 - Bad id")
+    public void givenNote_whenUpdateWithBadId_thenReturnBadRequest()
+            throws Exception {
+        Note note = new Note("6006e44ba2c25a63e0623b30", date1, date1, 1L,
+                "TestNone", "a note text");
+        noteRepository.save(note);
+
+        Note noteToUpdate = new Note("6006e44ba2c25a63e0623b30", date1, date1,
+                1L, "TestNone", "a note text - A NEW NOTE TEXT");
+        String jsonContent = objectMapper.writeValueAsString(noteToUpdate);
+        this.mockMvc
+                .perform(MockMvcRequestBuilders.put(API_URI_BASE)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(jsonContent).param("id", "badId"))
+                .andExpect(status().isBadRequest())
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isBadRequest()).andReturn();
+    }
+
+    @Test
+    @Tag("PUT")
+    @DisplayName("PUT Update note - ERROR 400 - Text deleted")
+    public void givenNote_whenUpdateWithBadTextNote_thenReturnBadRequest()
+            throws Exception {
+        Note note = new Note("6006e44ba2c25a63e0623b30", date1, date1, 1L,
+                "TestNone", "a note text");
+        noteRepository.save(note);
+
+        Note noteToUpdate = new Note("6006e44ba2c25a63e0623b30", date1, date1,
+                1L, "TestNone", "");
+        String jsonContent = objectMapper.writeValueAsString(noteToUpdate);
+        this.mockMvc
+                .perform(MockMvcRequestBuilders.put(API_URI_BASE)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(jsonContent)
+                        .param("id", "6006e44ba2c25a63e0623b30"))
+                .andExpect(status().isBadRequest())
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isBadRequest()).andReturn();
+    }
 }
