@@ -14,7 +14,8 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<name>Mediscreen_Abernathy_Notes</name>
 	<description>Notes microservice - Mediscreen project for the Abernathy clinic</description>
-
+	<packaging>jar</packaging>
+	
 	<properties>
 		<java.version>11</java.version>
 		<spring-cloud.version>2020.0.1-SNAPSHOT</spring-cloud.version>
