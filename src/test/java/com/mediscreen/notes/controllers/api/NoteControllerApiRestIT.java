@@ -48,11 +48,45 @@ public class NoteControllerApiRestIT {
 
     private static final String API_URI_GET_ALL_NOTES = "/api/note/all";
     private static final String API_URI_BASE = "/api/note";
+    private static final String API_URI_GET_ALL_NOTESDTO = "/api/note/getAllPatientsNoteDto/";
 
     @BeforeEach
     public void setUpPerTest() {
         mockMvc = MockMvcBuilders.webAppContextSetup(wac).build();
         noteRepository.deleteAll();
+    }
+
+    @Test
+    @Tag("/api/note/getAllPatientsNoteDto/{patId}")
+    @DisplayName("GET all patient's notes DTO - OK 200")
+    public void givenNote_whenGetNoteDto_thenReturnOk() throws Exception {
+        Note note = new Note();
+        note.setPatId(1L);
+        noteRepository.save(note);
+        this.mockMvc
+                .perform(MockMvcRequestBuilders
+                        .get(API_URI_GET_ALL_NOTESDTO + "1").param("patId", "1")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk()).andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isOk()).andReturn();
+    }
+
+    @Test
+    @Tag("/api/note/getAllPatientsNoteDto/{patId}")
+    @DisplayName("GET all patient's notes DTO - ERROR 404")
+    public void givenNote_whenGetNoteDtoWithBadId_thenReturnNotFound()
+            throws Exception {
+        Note note = new Note();
+        note.setPatId(1L);
+        noteRepository.save(note);
+        this.mockMvc
+                .perform(MockMvcRequestBuilders
+                        .get(API_URI_GET_ALL_NOTESDTO + "1111")
+                        .param("patId", "1")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound())
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isNotFound()).andReturn();
     }
 
     @Test

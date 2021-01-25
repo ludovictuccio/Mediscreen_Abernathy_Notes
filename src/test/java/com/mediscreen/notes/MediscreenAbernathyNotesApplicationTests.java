@@ -1,10 +1,13 @@
 package com.mediscreen.notes;
 
-//@SpringBootTest
-//class MediscreenAbernathyNotesApplicationTests {
-//
-//	@Test
-//	void contextLoads() {
-//	}
-//
-//}
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
+
+@SpringBootTest
+class MediscreenAbernathyNotesApplicationTests {
+
+    @Test
+    void contextLoads() {
+    }
+
+}
