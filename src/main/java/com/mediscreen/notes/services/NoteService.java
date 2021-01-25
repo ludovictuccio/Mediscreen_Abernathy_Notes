@@ -3,6 +3,7 @@ package com.mediscreen.notes.services;
 import java.util.List;
 
 import com.mediscreen.notes.domain.Note;
+import com.mediscreen.notes.domain.dto.NoteDto;
 
 public interface NoteService {
 
@@ -45,4 +46,12 @@ public interface NoteService {
      * @return note or null
      */
     Note getNote(final String id);
+
+    /**
+     * Method used to get all patient's NoteDto list.
+     *
+     * @param patId
+     * @return NoteDto list
+     */
+    List<NoteDto> getAllPatientsNoteDto(final Long patId);
 }
