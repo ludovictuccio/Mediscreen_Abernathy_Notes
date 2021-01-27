@@ -15,6 +15,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import com.mediscreen.notes.controllers.exceptions.DataNotFoundException;
 import com.mediscreen.notes.domain.Note;
+import com.mediscreen.notes.domain.dto.NoteDto;
 import com.mediscreen.notes.repository.NoteRepository;
 
 @SpringBootTest
@@ -33,6 +34,63 @@ public class NoteServiceTest {
     @BeforeEach
     public void setUpPerTest() {
         noteRepository.deleteAll();
+    }
+
+    @Test
+    @Tag("getAllPatientsNoteDto")
+    @DisplayName("getAllPatientsNoteDto - OK - Existing patient's id")
+    public void givenPatienWithTwoNotes_whenGetAllPatientsNotesDto_thenReturnTwoSizeList() {
+        // GIVEN
+        Note note = new Note("6006e44ba2c25a63e0623b30", date1, 1L, "TestNone",
+                "a note text");
+        noteRepository.save(note);
+        Note note2 = new Note("6006e45245452g", date1, 1L, "TestNone",
+                "a note text 2");
+        noteRepository.save(note2);
+
+        // WHEN
+        List<NoteDto> result = noteService.getAllPatientsNoteDto(1L);
+
+        // THEN
+        assertThat(result.size()).isEqualTo(2);
+        assertThat(result.get(0).getNote()).isEqualTo("a note text");
+        assertThat(result.get(1).getNote()).isEqualTo("a note text 2");
+    }
+
+    @Test
+    @Tag("getNote")
+    @DisplayName("getNote - OK - Existing id")
+    public void givenNote_whenGetById_thenReturnNote() {
+        // GIVEN
+        Note note = new Note("6006e44ba2c25a63e0623b30", date1, 1L, "TestNone",
+                "a note text");
+        noteRepository.save(note);
+
+        // WHEN
+        Note result = noteService.getNote("6006e44ba2c25a63e0623b30");
+
+        // THEN
+        assertThat(result).isNotNull();
+        assertThat(result.getPatientLastname()).isEqualTo("TestNone");
+        assertThat(noteRepository.findAll().size()).isEqualTo(1);
+        assertThat(noteRepository.findById("6006e44ba2c25a63e0623b30").get()
+                .getNote()).isEqualTo("a note text");
+    }
+
+    @Test
+    @Tag("getNote")
+    @DisplayName("getNote - ERROR - Bad note's id")
+    public void givenInvalidNoteId_whenGetById_thenReturnNull() {
+        // GIVEN
+        Note note = new Note("6006e44ba2c25a63e0623b30", date1, 1L, "TestNone",
+                "a note text");
+        noteRepository.save(note);
+
+        // WHEN
+        Note result = noteService.getNote("6006e");
+
+        // THEN
+        assertThat(result).isNull();
     }
 
     @Test

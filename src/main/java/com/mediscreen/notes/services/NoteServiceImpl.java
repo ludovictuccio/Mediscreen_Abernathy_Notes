@@ -1,6 +1,7 @@
 package com.mediscreen.notes.services;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
@@ -10,8 +11,10 @@ import org.springframework.stereotype.Service;
 
 import com.mediscreen.notes.controllers.exceptions.DataNotFoundException;
 import com.mediscreen.notes.domain.Note;
+import com.mediscreen.notes.domain.dto.NoteDto;
 import com.mediscreen.notes.repository.NoteRepository;
 import com.mediscreen.notes.util.ConstraintsValidator;
+import com.mediscreen.notes.util.EntityToDtoConverter;
 
 @Service
 public class NoteServiceImpl implements NoteService {
@@ -21,6 +24,9 @@ public class NoteServiceImpl implements NoteService {
 
     @Autowired
     private NoteRepository noteRepository;
+
+    @Autowired
+    private EntityToDtoConverter entityToDtoConverter;
 
     /**
      * Used while update note method: the number of characters allowed for the
@@ -94,6 +100,20 @@ public class NoteServiceImpl implements NoteService {
      */
     public Note getNote(final String id) {
         return noteRepository.findById(id).orElse(null);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public List<NoteDto> getAllPatientsNoteDto(final Long patId) {
+        List<Note> allNotes = getAllPatientNotes(patId);
+        List<NoteDto> allNoteDto = new ArrayList<>();
+
+        allNotes.stream().forEach(note -> {
+            NoteDto noteDto = entityToDtoConverter.convertNoteToDto(note);
+            allNoteDto.add(noteDto);
+        });
+        return allNoteDto;
     }
 
 }
