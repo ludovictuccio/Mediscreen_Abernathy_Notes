@@ -36,20 +36,20 @@ public class NoteControllerApiRest {
     @Autowired
     private NoteService noteService;
 
-    @ApiOperation(value = "GET all the notes for all patients", notes = "Return response 200", response = Note.class)
+    @ApiOperation(value = "GET all the notes list", notes = "Return response 200", response = Note.class)
     @GetMapping("/all")
     public List<Note> getAllNotes() {
         return noteService.getAllNotes();
     }
 
-    @ApiOperation(value = "GET all the patient's notes", notes = "Need param 'lastName' and 'firstName' - Return response 200 or 404 not found if no notes found", response = Note.class)
+    @ApiOperation(value = "GET all the patient's notes list", notes = "Need param 'lastName' and 'firstName' - Return response 200 or 404 not found if no notes found", response = Note.class)
     @GetMapping
     public List<Note> getAllPatientsNotes(@RequestParam final String lastName,
             @RequestParam final String firstName) {
         return noteService.getAllPatientNotes(lastName, firstName);
     }
 
-    @ApiOperation(value = "POST Add a new patient's note", notes = "Need Note body - Return response 201 created or 400 bad request")
+    @ApiOperation(value = "POST Add a new patient's note", notes = "Need Note body (with 'lastName', 'firstName', 'note') - Return response 201 created or 400 bad request")
     @PostMapping(consumes = { MediaType.ALL_VALUE })
     public ResponseEntity<Note> addNote(@Valid @RequestBody final Note note) {
         Note result = noteService.addNote(note);
@@ -61,7 +61,7 @@ public class NoteControllerApiRest {
         return new ResponseEntity<Note>(HttpStatus.BAD_REQUEST);
     }
 
-    @ApiOperation(value = "PUT Update a note", notes = "Need Note body (with 'patId', 'patientLastname', 'note') & param String 'id' with note's id - Return response 200 Ok or 400 bad request")
+    @ApiOperation(value = "PUT Update a note", notes = "Need Note body (with 'lastName', 'firstName', 'note') & param String 'id' with note's id - Return response 200 Ok or 400 bad request")
     @PutMapping
     public ResponseEntity<Boolean> updateNote(@RequestBody final Note note,
             @RequestParam final String id) {
@@ -73,6 +73,7 @@ public class NoteControllerApiRest {
         return new ResponseEntity<Boolean>(HttpStatus.BAD_REQUEST);
     }
 
+    @ApiOperation(value = "GET All patient's notes DTO", notes = "Need param String 'lastName' & String 'firstName' - Return response 200 or 404 not found if patient not found")
     @GetMapping("/getAllPatientsNoteDto")
     public List<NoteDto> getAllPatientsNoteDto(
             @RequestParam final String lastName,
