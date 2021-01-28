@@ -34,12 +34,9 @@ public class NoteRepositoryTest {
     @DisplayName("findAll - OK")
     public void givenThreeNotes_whenFindAll_thenReturnThree() {
         // GIVEN
-        Note note = new Note("6006e44ba2c25a63e0623b30", date1, 1L, "TestNone",
-                "a note text");
-        Note note2 = new Note("546465456451", date2, 2L, "TestBorderline",
-                "a note text");
-        Note note3 = new Note("4568468451656", date3, 3L, "TestInDanger",
-                "a note text");
+        Note note = new Note("TestNone", "Test", "a note text");
+        Note note2 = new Note("TestBorderline", "Test", "a note text");
+        Note note3 = new Note("TestInDanger", "Test", "a note text");
         historyRepository.save(note);
         historyRepository.save(note2);
         historyRepository.save(note3);
@@ -56,12 +53,10 @@ public class NoteRepositoryTest {
     @DisplayName("findByPatIdOrderByCreationDateDesc - OK")
     public void givenThreeNotes_whenFindByPatIdTwo_thenReturnOne() {
         // GIVEN
-        Note note = new Note("6006e44ba2c25a63e0623b30", date1, 1L, "TestNone",
-                "a note text");
-        Note note2 = new Note("546465456451", date2, 2L, "TestBorderline",
-                "a note text");
-        Note note3 = new Note("4568468451656", date3, 3L, "TestInDanger",
-                "a note text");
+        Note note = new Note("TestNone", "Test", "a note text");
+        Note note2 = new Note("TestBorderline", "Test", "a note text");
+        note2.setPatId(2L);
+        Note note3 = new Note("TestInDanger", "Test", "a note text");
         historyRepository.save(note);
         historyRepository.save(note2);
         historyRepository.save(note3);

@@ -46,13 +46,14 @@ public class NoteServiceImpl implements NoteService {
      * {@inheritDoc}
      */
     @Override
-    public List<Note> getAllPatientNotes(final Long patId) {
+    public List<Note> getAllPatientNotes(final String lastName,
+            final String firstName) {
         List<Note> allPatientsNotes = noteRepository
-                .findByPatIdOrderByCreationDateDesc(patId);
+                .findByLastNameAndFirstName(lastName, firstName);
 
         if (allPatientsNotes.isEmpty()) {
-            throw new DataNotFoundException(
-                    "Notes not found for patient id:" + patId);
+            throw new DataNotFoundException("Notes not found for patient:"
+                    + lastName + " " + firstName);
         }
         return allPatientsNotes;
     }
@@ -105,8 +106,9 @@ public class NoteServiceImpl implements NoteService {
     /**
      * {@inheritDoc}
      */
-    public List<NoteDto> getAllPatientsNoteDto(final Long patId) {
-        List<Note> allNotes = getAllPatientNotes(patId);
+    public List<NoteDto> getAllPatientsNoteDto(final String lastName,
+            final String firstName) {
+        List<Note> allNotes = getAllPatientNotes(lastName, firstName);
         List<NoteDto> allNoteDto = new ArrayList<>();
 
         allNotes.stream().forEach(note -> {

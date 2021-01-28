@@ -24,6 +24,7 @@ import com.mediscreen.notes.domain.Note;
 import com.mediscreen.notes.repository.NoteRepository;
 import com.mediscreen.notes.services.NoteService;
 
+//@WebMvcTest(value = NoteControllerApiRest.class)
 @SpringBootTest
 @AutoConfigureMockMvc
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
@@ -57,32 +58,30 @@ public class NoteControllerApiRestIT {
     }
 
     @Test
-    @Tag("/api/note/getAllPatientsNoteDto/{patId}")
+    @Tag("/api/note/getAllPatientsNoteDto")
     @DisplayName("GET all patient's notes DTO - OK 200")
     public void givenNote_whenGetNoteDto_thenReturnOk() throws Exception {
-        Note note = new Note();
-        note.setPatId(1L);
+        Note note = new Note("TestNone", "Test", "note");
         noteRepository.save(note);
         this.mockMvc
-                .perform(MockMvcRequestBuilders
-                        .get(API_URI_GET_ALL_NOTESDTO + "1").param("patId", "1")
+                .perform(MockMvcRequestBuilders.get(API_URI_GET_ALL_NOTESDTO)
+                        .param("lastName", "TestNone")
+                        .param("firstName", "Test")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk()).andDo(MockMvcResultHandlers.print())
                 .andExpect(status().isOk()).andReturn();
     }
 
     @Test
-    @Tag("/api/note/getAllPatientsNoteDto/{patId}")
+    @Tag("/api/note/getAllPatientsNoteDto")
     @DisplayName("GET all patient's notes DTO - ERROR 404")
     public void givenNote_whenGetNoteDtoWithBadId_thenReturnNotFound()
             throws Exception {
-        Note note = new Note();
-        note.setPatId(1L);
+        Note note = new Note("TestNone", "Test", "note");
         noteRepository.save(note);
         this.mockMvc
-                .perform(MockMvcRequestBuilders
-                        .get(API_URI_GET_ALL_NOTESDTO + "1111")
-                        .param("patId", "1")
+                .perform(MockMvcRequestBuilders.get(API_URI_GET_ALL_NOTESDTO)
+                        .param("lastName", "UNKNOW").param("firstName", "Test")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound())
                 .andDo(MockMvcResultHandlers.print())
@@ -94,12 +93,11 @@ public class NoteControllerApiRestIT {
     @DisplayName("POST - Add new note - OK - 201")
     public void givenNote_whenAddNewValidNote_thenReturnCreated()
             throws Exception {
-        Note note = new Note("6006e44ba2c25a63e0623b30", date1, 1L, "TestNone",
-                "a note text");
+        Note note = new Note("TestNone", "Test", "a note text");
         noteRepository.save(note);
         this.mockMvc.perform(MockMvcRequestBuilders.post(API_URI_BASE)
                 .contentType(MediaType.APPLICATION_JSON).content(
-                        "{ \"patId\": 1, \"patientLastname\": \"TestNone\",\"note\": \"A new note text !\"}"))
+                        "{ \"lastName\": \"TestNone\",\"firstName\": \"Test\",\"note\": \"A new note text !\"}"))
                 .andExpect(status().isCreated())
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(status().isCreated()).andReturn();
@@ -107,15 +105,14 @@ public class NoteControllerApiRestIT {
 
     @Test
     @Tag("/api/note")
-    @DisplayName("POST - Add new note - Error - 400")
+    @DisplayName("POST - Add new note - Error - 400 - Empty firstName")
     public void givenNote_whenAddInvalidNote_thenReturnBadRequest()
             throws Exception {
-        Note note = new Note("6006e44ba2c25a63e0623b30", date1, 1L, "TestNone",
-                "a note text");
+        Note note = new Note("TestNone", "Test", "a note text");
         noteRepository.save(note);
         this.mockMvc.perform(MockMvcRequestBuilders.post(API_URI_BASE)
                 .contentType(MediaType.APPLICATION_JSON).content(
-                        "{\"patId\": 4, \"patientLastname\": \"\",\"note\": \"A new note text !\"}"))
+                        "{ \"lastName\": \"UNKNOW\",\"firstName\": \"\",\"note\": \"A new note text !\"}"))
                 .andExpect(status().isBadRequest())
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(status().isBadRequest()).andReturn();
@@ -136,12 +133,12 @@ public class NoteControllerApiRestIT {
     @Tag("/api/note")
     @DisplayName("GET all patient's notes - OK - 200")
     public void givenOneNote_whenGet_thenReturnOk() throws Exception {
-        Note note = new Note();
-        note.setPatId(1L);
+        Note note = new Note("TestNone", "Test", "note !");
         noteRepository.save(note);
         this.mockMvc
                 .perform(MockMvcRequestBuilders.get(API_URI_BASE)
-                        .param("patId", "1")
+                        .param("lastName", "TestNone")
+                        .param("firstName", "Test")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk()).andDo(MockMvcResultHandlers.print())
                 .andExpect(status().isOk()).andReturn();
@@ -154,7 +151,8 @@ public class NoteControllerApiRestIT {
             throws Exception {
         this.mockMvc
                 .perform(MockMvcRequestBuilders.get(API_URI_BASE)
-                        .param("patId", "1")
+                        .param("lastName", "TestNone")
+                        .param("firstName", "unknow")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound())
                 .andDo(MockMvcResultHandlers.print())
@@ -165,18 +163,17 @@ public class NoteControllerApiRestIT {
     @Tag("PUT")
     @DisplayName("PUT Update note - OK - 200")
     public void givenNote_whenUpdate_thenReturnOK() throws Exception {
-        Note note = new Note("6006e44ba2c25a63e0623b30", date1, 1L, "TestNone",
-                "a note text");
+        Note note = new Note("TestNone", "Test", "a note text");
         noteRepository.save(note);
 
-        Note noteToUpdate = new Note("6006e44ba2c25a63e0623b30", date1, 1L,
-                "TestNone", "a note text - A NEW NOTE TEXT");
+        Note noteToUpdate = new Note("TestNone", "Test",
+                "a note text - A NEW NOTE TEXT");
+        String noteId = noteRepository.findAll().get(0).getId();
         String jsonContent = objectMapper.writeValueAsString(noteToUpdate);
         this.mockMvc
                 .perform(MockMvcRequestBuilders.put(API_URI_BASE)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(jsonContent)
-                        .param("id", "6006e44ba2c25a63e0623b30"))
+                        .content(jsonContent).param("id", noteId))
                 .andExpect(status().isOk()).andDo(MockMvcResultHandlers.print())
                 .andExpect(status().isOk()).andReturn();
     }
@@ -186,12 +183,11 @@ public class NoteControllerApiRestIT {
     @DisplayName("PUT Update note - ERROR 400 - Bad id")
     public void givenNote_whenUpdateWithBadId_thenReturnBadRequest()
             throws Exception {
-        Note note = new Note("6006e44ba2c25a63e0623b30", date1, 1L, "TestNone",
-                "a note text");
+        Note note = new Note("TestNone", "Test", "a note text");
         noteRepository.save(note);
 
-        Note noteToUpdate = new Note("6006e44ba2c25a63e0623b30", date1, 1L,
-                "TestNone", "a note text - A NEW NOTE TEXT");
+        Note noteToUpdate = new Note("TestNone", "Test",
+                "a note text - A NEW NOTE TEXT");
         String jsonContent = objectMapper.writeValueAsString(noteToUpdate);
         this.mockMvc
                 .perform(MockMvcRequestBuilders.put(API_URI_BASE)
@@ -207,18 +203,16 @@ public class NoteControllerApiRestIT {
     @DisplayName("PUT Update note - ERROR 400 - Text deleted")
     public void givenNote_whenUpdateWithBadTextNote_thenReturnBadRequest()
             throws Exception {
-        Note note = new Note("6006e44ba2c25a63e0623b30", date1, 1L, "TestNone",
-                "a note text");
+        Note note = new Note("TestNone", "Test", "a note text");
         noteRepository.save(note);
+        String noteId = noteRepository.findAll().get(0).getId();
 
-        Note noteToUpdate = new Note("6006e44ba2c25a63e0623b30", date1, 1L,
-                "TestNone", "");
+        Note noteToUpdate = new Note("TestNone", "Test", "");
         String jsonContent = objectMapper.writeValueAsString(noteToUpdate);
         this.mockMvc
                 .perform(MockMvcRequestBuilders.put(API_URI_BASE)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(jsonContent)
-                        .param("id", "6006e44ba2c25a63e0623b30"))
+                        .content(jsonContent).param("id", noteId))
                 .andExpect(status().isBadRequest())
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(status().isBadRequest()).andReturn();

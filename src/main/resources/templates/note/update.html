@@ -27,7 +27,7 @@
 			<div class="form-group">
 				<div class="col-sm-12">
 					<input type="hidden" th:field="*{id}">
-					<a class="btn btn-danger btn-sm" th:href="@{/note/list?patId={patId}(patId=${note.patId})}">Cancel</a>										
+					<a class="btn btn-danger btn-sm" th:href="@{/note/list?lastName={lastName}&firstName={firstName}(lastName=${note.lastName},firstName=${note.firstName})}">Cancel</a>										
 					<input class="btn btn-primary btn-sm" type="submit" value="Update Notes">
 				</div>
 			</div>

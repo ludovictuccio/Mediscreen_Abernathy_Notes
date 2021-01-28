@@ -28,11 +28,12 @@ public class NoteController {
     @Autowired
     private NoteService noteService;
 
-    @ApiOperation(value = "GET list of all patient's notes", notes = "THYMELEAF - Return response 200")
+    @ApiOperation(value = "GET list of all patient's notes", notes = "THYMELEAF")
     @GetMapping("/note/list")
-    public String list(@RequestParam("patId") final Long patId,
-            final Model model) {
-        model.addAttribute("notes", noteService.getAllPatientNotes(patId));
+    public String list(@RequestParam final String lastName,
+            @RequestParam final String firstName, final Model model) {
+        model.addAttribute("notes",
+                noteService.getAllPatientNotes(lastName, firstName));
         return "note/list";
     }
 
@@ -59,12 +60,8 @@ public class NoteController {
             Note noteToAdd = noteService.addNote(note);
             if (noteToAdd != null) {
                 model.addAttribute("note", noteToAdd);
-                return "redirect:/note/list?patId=" + note.getPatId();
-            } else {
-                LOGGER.error("POST request FAILED for: /note/validate");
-                LOGGER.error(
-                        "The user id must be the good association with patient's lastName. Please check your entries");
-                return "note/add";
+                return "redirect:/note/list?lastName=" + note.getLastName()
+                        + "&firstName=" + note.getFirstName();
             }
         }
         LOGGER.error("POST request FAILED for: /note/validate");
@@ -82,6 +79,8 @@ public class NoteController {
             return "redirect:/note/list";
         }
         model.addAttribute("note", note);
+        model.addAttribute("lastName", note.getLastName());
+        model.addAttribute("firstName", note.getFirstName());
         return "note/update";
     }
 
@@ -96,7 +95,8 @@ public class NoteController {
         noteService.updateNote(note, id);
         model.addAttribute("note", note);
         Note existingNote = noteService.getNote(id);
-        return "redirect:/note/list?patId=" + existingNote.getPatId();
+        return "redirect:/note/list?lastName=" + existingNote.getLastName()
+                + "&firstName=" + existingNote.getFirstName();
     }
 
 }

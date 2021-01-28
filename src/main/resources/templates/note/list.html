@@ -11,12 +11,6 @@
 		<div class="row">
 			<h2 style="width: 100%">Patient's history - All notes</h2>
 		</div>
-<!-- 		<div class="row"> -->
-<!-- 			<div class="col-6"></div> -->
-<!-- 			<div class="col-6 text-right"> -->
-<!-- 				<a href="@{/patient/medicalRecord/{patId}(patId=${note.patId})}">Return</a>&nbsp; -->
-<!-- 			</div> -->
-<!-- 		</div> -->
 		<div class="row">
 			<div class="col-6"></div>
 			<div class="col-6 text-right">
@@ -31,17 +25,17 @@
 			<table class="table table-striped table-bordered col-12"  style="width: 100%">
 				<thead>
 					<tr>
-						<th style="width: 10%">Creation date</th>
-						<th style="width: 10%">Patient id</th>
+						<th style="width: 15%">Creation date</th>
 						<th style="width: 15%">Patient lastname</th>
-						<th style="width: 35%">Notes</th>
+						<th style="width: 15%">Patient firstname</th>
+						<th style="width: 65%">Notes</th>
 					</tr>
 				</thead>
 				<tbody>
 					<tr th:each="note : ${notes}">
 						<td th:text="${note.creationDate}"></td>
-						<td th:text="${note.patId}"></td>
-						<td th:text="${note.patientLastname}"></td>
+						<td th:text="${note.lastName}"></td>
+						<td th:text="${note.firstName}"></td>
 						<td th:text="${note.note}"></td>
 						<td style="width: 15%" class="text-center"><a
 							th:href="@{/note/update/{id}(id=${note.id})}">Edit</a>&nbsp;

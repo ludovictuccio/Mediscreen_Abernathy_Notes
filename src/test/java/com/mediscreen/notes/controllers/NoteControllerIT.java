@@ -64,12 +64,11 @@ public class NoteControllerIT {
     @Tag("/note/update")
     @DisplayName("Get - Update - OK")
     public void givenNote_whenUpdateWithHisId_thenReturnOk() throws Exception {
-        Note note = new Note("6006e44ba2c25a63e0623b30", date1, 1L, "TestNone",
-                "a note text");
+        Note note = new Note("TestNone", "Test", "a note text");
         noteRepository.save(note);
+        String noteId = noteRepository.findAll().get(0).getId();
         this.mockMvc
-                .perform(MockMvcRequestBuilders
-                        .get(URI_UPDATE + "/6006e44ba2c25a63e0623b30"))
+                .perform(MockMvcRequestBuilders.get(URI_UPDATE + "/" + noteId))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(
                         MockMvcResultMatchers.model().attributeExists("note"))
@@ -82,8 +81,7 @@ public class NoteControllerIT {
     @DisplayName("Get - Update - Error - Bad id")
     public void givenNote_whenUpdateWithInvalidId_thenReturnBadRequest()
             throws Exception {
-        Note note = new Note("6006e44ba2c25a63e0623b30", date1, 1L, "TestNone",
-                "a note text");
+        Note note = new Note("TestNone", "Test", "a note text");
         noteRepository.save(note);
         this.mockMvc
                 .perform(MockMvcRequestBuilders.get(URI_UPDATE + "/badId50"))
@@ -109,11 +107,10 @@ public class NoteControllerIT {
     @Tag("/note/validate")
     @DisplayName("Post - Validate / Add - OK")
     public void givenPatient_whenPostValidate_thenReturnOk() throws Exception {
-        Note note = new Note("6006e44ba2c25a63e0623b30", date1, 1L, "TestNone",
-                "a note text");
+        Note note = new Note("TestNone", "Test", "a note text");
         noteRepository.save(note);
 
-        Note note2 = new Note("45544545", date1, 1L, "TestNone", "a note text");
+        Note note2 = new Note("TestNone", "Test", "a note text NEW !");
         String jsonContent = objectMapper.writeValueAsString(note2);
         this.mockMvc
                 .perform(MockMvcRequestBuilders.post(URI_POST_ADD_VALIDATE)
@@ -126,12 +123,13 @@ public class NoteControllerIT {
     @Tag("/note/list")
     @DisplayName("Get - OK - Notes list - Existing note with patId")
     public void givenNoteWithPatId_whenGetIt_thenReturnOk() throws Exception {
-        Note note = new Note();
-        note.setPatId(1L);
+        Note note = new Note("TestNone", "Test", "a note text");
         noteRepository.save(note);
         this.mockMvc
                 .perform(MockMvcRequestBuilders.get(URI_GET_PATIENT_NOTES_LIST)
-                        .contentType(APPLICATION_JSON).param("patId", "1"))
+                        .contentType(APPLICATION_JSON)
+                        .param("lastName", "TestNone")
+                        .param("firstName", "Test"))
                 .andExpect(status().isOk()).andDo(MockMvcResultHandlers.print())
                 .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.model().hasNoErrors())
@@ -145,7 +143,9 @@ public class NoteControllerIT {
             throws Exception {
         this.mockMvc
                 .perform(MockMvcRequestBuilders.get(URI_GET_PATIENT_NOTES_LIST)
-                        .contentType(APPLICATION_JSON).param("patId", "2"))
+                        .contentType(APPLICATION_JSON)
+                        .param("lastName", "TestNone")
+                        .param("firstName", "Test"))
                 .andExpect(status().isNotFound())
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(status().isNotFound()).andReturn();

@@ -10,10 +10,12 @@ public interface NoteService {
     /**
      * Method used to get all patient's notes.
      *
-     * @param patId
+     * @param patient's lastName
+     * @param patient's firstName
      * @return all patient's notes
      */
-    List<Note> getAllPatientNotes(final Long patId);
+    List<Note> getAllPatientNotes(final String lastName,
+            final String firstName);
 
     /**
      * Method used to get all notes.
@@ -50,8 +52,10 @@ public interface NoteService {
     /**
      * Method used to get all patient's NoteDto list.
      *
-     * @param patId
+     * @param patient's lastName
+     * @param patient's firstName
      * @return NoteDto list
      */
-    List<NoteDto> getAllPatientsNoteDto(final Long patId);
+    List<NoteDto> getAllPatientsNoteDto(final String lastName,
+            final String firstName);
 }
