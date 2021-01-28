@@ -12,6 +12,7 @@ public interface NoteRepository extends MongoRepository<Note, String> {
 
     List<Note> findByPatIdOrderByCreationDateDesc(final Long patId);
 
-    // Note findNoteByPatId(final Long patId);
+    List<Note> findByLastNameAndFirstName(final String lastName,
+            final String firstName);
 
 }

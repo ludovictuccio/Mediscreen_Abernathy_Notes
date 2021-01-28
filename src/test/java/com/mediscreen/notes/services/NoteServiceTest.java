@@ -41,15 +41,14 @@ public class NoteServiceTest {
     @DisplayName("getAllPatientsNoteDto - OK - Existing patient's id")
     public void givenPatienWithTwoNotes_whenGetAllPatientsNotesDto_thenReturnTwoSizeList() {
         // GIVEN
-        Note note = new Note("6006e44ba2c25a63e0623b30", date1, 1L, "TestNone",
-                "a note text");
+        Note note = new Note("TestNone", "Test", "a note text");
         noteRepository.save(note);
-        Note note2 = new Note("6006e45245452g", date1, 1L, "TestNone",
-                "a note text 2");
+        Note note2 = new Note("TestNone", "Test", "a note text 2");
         noteRepository.save(note2);
 
         // WHEN
-        List<NoteDto> result = noteService.getAllPatientsNoteDto(1L);
+        List<NoteDto> result = noteService.getAllPatientsNoteDto("TestNone",
+                "Test");
 
         // THEN
         assertThat(result.size()).isEqualTo(2);
@@ -62,19 +61,20 @@ public class NoteServiceTest {
     @DisplayName("getNote - OK - Existing id")
     public void givenNote_whenGetById_thenReturnNote() {
         // GIVEN
-        Note note = new Note("6006e44ba2c25a63e0623b30", date1, 1L, "TestNone",
-                "a note text");
+        Note note = new Note("TestNone", "Test", "a note text");
         noteRepository.save(note);
+        String noteId = noteRepository.findAll().get(0).getId();
 
         // WHEN
-        Note result = noteService.getNote("6006e44ba2c25a63e0623b30");
+        Note result = noteService.getNote(noteId);
 
         // THEN
         assertThat(result).isNotNull();
-        assertThat(result.getPatientLastname()).isEqualTo("TestNone");
+        assertThat(result.getLastName()).isEqualTo("TestNone");
+        assertThat(result.getFirstName()).isEqualTo("Test");
         assertThat(noteRepository.findAll().size()).isEqualTo(1);
-        assertThat(noteRepository.findById("6006e44ba2c25a63e0623b30").get()
-                .getNote()).isEqualTo("a note text");
+        assertThat(noteRepository.findById(noteId).get().getNote())
+                .isEqualTo("a note text");
     }
 
     @Test
@@ -82,9 +82,9 @@ public class NoteServiceTest {
     @DisplayName("getNote - ERROR - Bad note's id")
     public void givenInvalidNoteId_whenGetById_thenReturnNull() {
         // GIVEN
-        Note note = new Note("6006e44ba2c25a63e0623b30", date1, 1L, "TestNone",
-                "a note text");
+        Note note = new Note("TestNone", "Test", "a note text");
         noteRepository.save(note);
+        String noteId = noteRepository.findAll().get(0).getId();
 
         // WHEN
         Note result = noteService.getNote("6006e");
@@ -98,12 +98,10 @@ public class NoteServiceTest {
     @DisplayName("updateNote - OK")
     public void givenNote_whenUpdateWithValidId_thenReturnUpdated() {
         // GIVEN
-        Note note = new Note("6006e44ba2c25a63e0623b30", date1, 1L, "TestNone",
-                "a note text");
+        Note note = new Note("TestNone", "Test", "a note text");
         noteRepository.save(note);
-
-        Note noteToUpdate = new Note("6006e44ba2c25a63e0623b30", date1, 1L,
-                "TestNone", "NEW NOTE");
+        String noteId = noteRepository.findAll().get(0).getId();
+        Note noteToUpdate = new Note("TestNone", "Test", "NEW NOTE");
 
         // WHEN
         boolean result = noteService.updateNote(noteToUpdate, note.getId());
@@ -111,8 +109,8 @@ public class NoteServiceTest {
         // THEN
         assertThat(result).isTrue();
         assertThat(noteRepository.findAll().size()).isEqualTo(1);
-        assertThat(noteRepository.findById("6006e44ba2c25a63e0623b30").get()
-                .getNote()).isEqualTo("NEW NOTE");
+        assertThat(noteRepository.findById(noteId).get().getNote())
+                .isEqualTo("NEW NOTE");
     }
 
     @Test
@@ -120,12 +118,11 @@ public class NoteServiceTest {
     @DisplayName("updateNote - Error - More than 10 characters deleted")
     public void givenNote_whenUpdateWithInvalidId_thenReturnFalse() {
         // GIVEN
-        Note note = new Note("6006e44ba2c25a63e0623b30", date1, 1L, "TestNone",
+        Note note = new Note("TestNone", "Test",
                 "a note text ------------------ other");
         noteRepository.save(note);
-
-        Note noteToUpdate = new Note("6006e44ba2c25a63e0623b30", date1, 1L,
-                "TestNone", "NEW NOTE");
+        String noteId = noteRepository.findAll().get(0).getId();
+        Note noteToUpdate = new Note("TestNone", "Test", "NEW NOTE");
 
         // WHEN
         boolean result = noteService.updateNote(noteToUpdate, note.getId());
@@ -133,8 +130,8 @@ public class NoteServiceTest {
         // THEN
         assertThat(result).isFalse();
         assertThat(noteRepository.findAll().size()).isEqualTo(1);
-        assertThat(noteRepository.findById("6006e44ba2c25a63e0623b30").get()
-                .getNote()).isEqualTo("a note text ------------------ other");
+        assertThat(noteRepository.findById(noteId).get().getNote())
+                .isEqualTo("a note text ------------------ other");
     }
 
     @Test
@@ -142,18 +139,17 @@ public class NoteServiceTest {
     @DisplayName("getNote - OK - Valid note's id")
     public void givenNote_whenGetWithHisId_thenReturnNote() {
         // GIVEN
-        Note note = new Note("6006e44ba2c25a63e0623b30", date1, 1L, "TestNone",
-                "a note text");
+        Note note = new Note("TestNone", "Test", "a note text");
         noteRepository.save(note);
         assertThat(noteRepository.findAll().size()).isEqualTo(1);
+        String noteId = noteRepository.findAll().get(0).getId();
 
         // WHEN
-        Note result = noteService.getNote("6006e44ba2c25a63e0623b30");
+        Note result = noteService.getNote(noteId);
 
         // THEN
         assertThat(result).isNotNull();
-        assertThat(result.getPatId()).isEqualTo(1L);
-        assertThat(result.getPatientLastname()).isEqualTo("TestNone");
+        assertThat(result.getLastName()).isEqualTo("TestNone");
         assertThat(noteRepository.findAll().size()).isEqualTo(1);
     }
 
@@ -162,9 +158,9 @@ public class NoteServiceTest {
     @DisplayName("getNote - ERROR - Invalid note's id")
     public void givenNote_whenGetWithBadId_thenReturnNote() {
         // GIVEN
-        Note note = new Note("6006e44ba2c25a63e0623b30", date1, 1L, "TestNone",
-                "a note text");
+        Note note = new Note("TestNone", "Test", "a note text");
         noteRepository.save(note);
+        String noteId = noteRepository.findAll().get(0).getId();
         assertThat(noteRepository.findAll().size()).isEqualTo(1);
 
         // WHEN
@@ -179,14 +175,13 @@ public class NoteServiceTest {
     @DisplayName("addNote - OK")
     public void givenExistingNote_whenAddNewValidNote_thenReturnOk() {
         // GIVEN
-        Note note = new Note("6006e44ba2c25a63e0623b30", date1, 1L, "TestNone",
-                "a note text");
+        Note note = new Note("TestNone", "Test", "a note text");
         noteRepository.save(note);
         assertThat(noteRepository.findAll().size()).isEqualTo(1);
 
         Note newNote = new Note();
-        newNote.setPatId(1L);
-        newNote.setPatientLastname("TestNone");
+        newNote.setLastName("TestNone");
+        newNote.setFirstName("Test");
         newNote.setNote("a new note text");
 
         // WHEN
@@ -194,23 +189,21 @@ public class NoteServiceTest {
 
         // THEN
         assertThat(result).isNotNull();
-        assertThat(result.getPatId()).isEqualTo(1L);
-        assertThat(result.getPatientLastname()).isEqualTo("TestNone");
+        assertThat(result.getLastName()).isEqualTo("TestNone");
         assertThat(noteRepository.findAll().size()).isEqualTo(2);
     }
 
     @Test
     @Tag("addNote")
-    @DisplayName("addNote - ERROR - Empty patId")
-    public void givenEmptyPatId_whenAddNewValidNote_thenReturnOk() {
+    @DisplayName("addNote - ERROR - Empty firstname")
+    public void givenEmptyFirstName_whenAddNewValidNote_thenReturnOk() {
         // GIVEN
-        Note note = new Note("6006e44ba2c25a63e0623b30", date1, 1L, "TestNone",
-                "a note text");
+        Note note = new Note("TestNone", "Test", "a note text");
         noteRepository.save(note);
         assertThat(noteRepository.findAll().size()).isEqualTo(1);
 
         Note newNote = new Note();
-        newNote.setPatientLastname("TestNone");
+        newNote.setLastName("TestNone");
         newNote.setNote("a new note text");
 
         // WHEN
@@ -226,13 +219,12 @@ public class NoteServiceTest {
     @DisplayName("addNote - ERROR - Empty patient lastname")
     public void givenEmptyLastname_whenAddNewValidNote_thenReturnOk() {
         // GIVEN
-        Note note = new Note("6006e44ba2c25a63e0623b30", date1, 1L, "TestNone",
-                "a note text");
+        Note note = new Note("TestNone", "Test", "a note text");
         noteRepository.save(note);
         assertThat(noteRepository.findAll().size()).isEqualTo(1);
 
         Note newNote = new Note();
-        newNote.setPatId(1L);
+        newNote.setFirstName("Test");
         newNote.setNote("a new note text");
 
         // WHEN
@@ -248,14 +240,13 @@ public class NoteServiceTest {
     @DisplayName("addNote - ERROR - Empty patient note text")
     public void givenEmptyNoteText_whenAddNewValidNote_thenReturnOk() {
         // GIVEN
-        Note note = new Note("6006e44ba2c25a63e0623b30", date1, 1L, "TestNone",
-                "a note text");
+        Note note = new Note("TestNone", "Test", "a note text");
         noteRepository.save(note);
         assertThat(noteRepository.findAll().size()).isEqualTo(1);
 
         Note newNote = new Note();
-        newNote.setPatId(1L);
-        newNote.setPatientLastname("TestNone");
+        newNote.setLastName("TestNone");
+        newNote.setFirstName("Test");
 
         // WHEN
         Note result = noteService.addNote(newNote);
@@ -270,18 +261,16 @@ public class NoteServiceTest {
     @DisplayName("getAllPatientNotes - OK - Patient 2")
     public void givenThreeNotes_whenPatiensNotesForPatientTwo_thenReturnOne() {
         // GIVEN
-        Note note = new Note("6006e44ba2c25a63e0623b30", date1, 1L, "TestNone",
-                "a note text");
-        Note note2 = new Note("546465456451", date2, 2L, "TestBorderline",
-                "a note text");
-        Note note3 = new Note("4568468451656", date3, 3L, "TestInDanger",
-                "a note text");
+        Note note = new Note("TestNone", "Test", "a note text");
+        Note note2 = new Note("TestBorderline", "Test", "a note text");
+        Note note3 = new Note("TestInDanger", "Test", "a note text");
         noteRepository.save(note);
         noteRepository.save(note2);
         noteRepository.save(note3);
 
         // WHEN
-        List<Note> result = noteService.getAllPatientNotes(2L);
+        List<Note> result = noteService.getAllPatientNotes("TestBorderline",
+                "Test");
 
         // THEN
         assertThat(result.size()).isEqualTo(1);
@@ -294,7 +283,7 @@ public class NoteServiceTest {
 
         assertThatExceptionOfType(DataNotFoundException.class)
                 .isThrownBy(() -> {
-                    noteService.getAllPatientNotes(2L);
+                    noteService.getAllPatientNotes("UNKNOW", "Test");
                 });
     }
 
@@ -303,12 +292,9 @@ public class NoteServiceTest {
     @DisplayName("getAllNotes - OK - 3")
     public void givenThreeNotes_whenGetAllNotes_thenReturnThree() {
         // GIVEN
-        Note note = new Note("6006e44ba2c25a63e0623b30", date1, 1L, "TestNone",
-                "a note text");
-        Note note2 = new Note("546465456451", date2, 2L, "TestBorderline",
-                "a note text");
-        Note note3 = new Note("4568468451656", date3, 3L, "TestInDanger",
-                "a note text");
+        Note note = new Note("TestNone", "Test", "a note text");
+        Note note2 = new Note("TestBorderline", "Test", "a note text");
+        Note note3 = new Note("TestInDanger", "Test", "a note text");
         noteRepository.save(note);
         noteRepository.save(note2);
         noteRepository.save(note3);

@@ -5,7 +5,6 @@ import java.time.LocalDate;
 
 import javax.persistence.Id;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
@@ -35,16 +34,29 @@ public class Note implements Serializable {
     @Field(value = "creationDate")
     private LocalDate creationDate;
 
-    @NotNull(message = "Patient Id can't be empty")
     @Field(value = "patId")
     private Long patId;
 
     @NotBlank(message = "Patient lastname can't be empty")
-    @Field(value = "patientLastname")
-    private String patientLastname;
+    @Field(value = "LastName")
+    private String lastName;
+
+    @NotBlank(message = "Patient firstName can't be empty")
+    @Field(value = "FirstName")
+    private String firstName;
 
     @NotBlank(message = "Text can't be empty")
-    @Field(value = "note")
+    @Field(value = "Notes")
     private String note;
+
+    public Note(
+            @NotBlank(message = "Patient lastname can't be empty") String lastName,
+            @NotBlank(message = "Patient firstName can't be empty") String firstName,
+            @NotBlank(message = "Text can't be empty") String note) {
+        super();
+        this.lastName = lastName;
+        this.firstName = firstName;
+        this.note = note;
+    }
 
 }

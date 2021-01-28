@@ -12,7 +12,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -43,10 +42,11 @@ public class NoteControllerApiRest {
         return noteService.getAllNotes();
     }
 
-    @ApiOperation(value = "GET all the patient's notes", notes = "Need param 'patId', the patient's id - Return response 200 or 404 not found if no notes found", response = Note.class)
+    @ApiOperation(value = "GET all the patient's notes", notes = "Need param 'lastName' and 'firstName' - Return response 200 or 404 not found if no notes found", response = Note.class)
     @GetMapping
-    public List<Note> getAllPatientsNotes(@RequestParam final Long patId) {
-        return noteService.getAllPatientNotes(patId);
+    public List<Note> getAllPatientsNotes(@RequestParam final String lastName,
+            @RequestParam final String firstName) {
+        return noteService.getAllPatientNotes(lastName, firstName);
     }
 
     @ApiOperation(value = "POST Add a new patient's note", notes = "Need Note body - Return response 201 created or 400 bad request")
@@ -73,10 +73,11 @@ public class NoteControllerApiRest {
         return new ResponseEntity<Boolean>(HttpStatus.BAD_REQUEST);
     }
 
-    @GetMapping("/getAllPatientsNoteDto/{patId}")
+    @GetMapping("/getAllPatientsNoteDto")
     public List<NoteDto> getAllPatientsNoteDto(
-            @PathVariable("patId") Long patId) {
-        return noteService.getAllPatientsNoteDto(patId);
+            @RequestParam final String lastName,
+            @RequestParam final String firstName) {
+        return noteService.getAllPatientsNoteDto(lastName, firstName);
     }
 
 }
