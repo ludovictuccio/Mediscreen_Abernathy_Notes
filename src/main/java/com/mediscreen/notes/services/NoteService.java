@@ -10,12 +10,11 @@ public interface NoteService {
     /**
      * Method used to get all patient's notes.
      *
-     * @param patient's lastName
-     * @param patient's firstName
+     * @param lastName
+     * @param firstName
      * @return all patient's notes
      */
-    List<Note> getAllPatientNotes(final String lastName,
-            final String firstName);
+    List<Note> getAllPatientNotes(String lastName, String firstName);
 
     /**
      * Method used to get all notes.
@@ -30,7 +29,7 @@ public interface NoteService {
      * @param note
      * @return note
      */
-    Note addNote(final Note note);
+    Note addNote(Note note);
 
     /**
      * Method used to update a note, using his id.
@@ -39,7 +38,7 @@ public interface NoteService {
      * @param id   the note's id
      * @return boolean isUpdated
      */
-    boolean updateNote(final Note note, final String id);
+    boolean updateNote(Note note, String id);
 
     /**
      * Method used to get a note with his id.
@@ -47,15 +46,14 @@ public interface NoteService {
      * @param id
      * @return note or null
      */
-    Note getNote(final String id);
+    Note getNote(String id);
 
     /**
      * Method used to get all patient's NoteDto list.
      *
-     * @param patient's lastName
-     * @param patient's firstName
+     * @param lastName
+     * @param firstName
      * @return NoteDto list
      */
-    List<NoteDto> getAllPatientsNoteDto(final String lastName,
-            final String firstName);
+    List<NoteDto> getAllPatientsNoteDto(String lastName, String firstName);
 }

@@ -66,7 +66,7 @@ public class NoteControllerApiRest {
     public ResponseEntity<Boolean> updateNote(@RequestBody final Note note,
             @RequestParam final String id) {
         boolean result = noteService.updateNote(note, id);
-        if (result == true) {
+        if (result) {
             return new ResponseEntity<Boolean>(HttpStatus.OK);
         }
         LOGGER.error("PUT request FAILED for: /api/note");
