@@ -61,6 +61,15 @@ services:
     depends_on:
       - mediscreen-mongodb
 
+  reports:
+    image: mediscreen-reports
+    container_name: mediscreen-reports
+    ports:
+      - 8083:8083
+    networks:
+      - md-net
+    restart: always
+
 
 networks:
   md-net:
