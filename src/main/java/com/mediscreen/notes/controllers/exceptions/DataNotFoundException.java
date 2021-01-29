@@ -4,7 +4,7 @@ public class DataNotFoundException extends RuntimeException {
 
     private static final long serialVersionUID = 1L;
 
-    public DataNotFoundException(String message) {
+    public DataNotFoundException(final String message) {
         super(message);
     }
 }

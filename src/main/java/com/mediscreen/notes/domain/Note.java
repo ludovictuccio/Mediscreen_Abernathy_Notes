@@ -50,13 +50,13 @@ public class Note implements Serializable {
     private String note;
 
     public Note(
-            @NotBlank(message = "Patient lastname can't be empty") String lastName,
-            @NotBlank(message = "Patient firstName can't be empty") String firstName,
-            @NotBlank(message = "Text can't be empty") String note) {
+            @NotBlank(message = "Patient lastname can't be empty") final String plastName,
+            @NotBlank(message = "Patient firstName can't be empty") final String pfirstName,
+            @NotBlank(message = "Text can't be empty") final String pnote) {
         super();
-        this.lastName = lastName;
-        this.firstName = firstName;
-        this.note = note;
+        this.lastName = plastName;
+        this.firstName = pfirstName;
+        this.note = pnote;
     }
 
 }

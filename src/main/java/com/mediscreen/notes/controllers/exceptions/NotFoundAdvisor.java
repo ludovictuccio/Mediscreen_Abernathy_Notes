@@ -11,7 +11,8 @@ import org.springframework.web.context.request.WebRequest;
 public class NotFoundAdvisor {
 
     @ExceptionHandler({ DataNotFoundException.class })
-    public ResponseEntity<Object> handleAll(Exception ex, WebRequest request) {
+    public ResponseEntity<Object> handleAll(final Exception ex,
+            final WebRequest request) {
         ApiError apiError = new ApiError(HttpStatus.NOT_FOUND,
                 ex.getLocalizedMessage(), "Error occurred");
         return new ResponseEntity<Object>(apiError, new HttpHeaders(),

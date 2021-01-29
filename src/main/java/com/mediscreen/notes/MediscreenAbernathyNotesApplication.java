@@ -11,7 +11,7 @@ import org.springframework.web.filter.CommonsRequestLoggingFilter;
 @SpringBootApplication
 public class MediscreenAbernathyNotesApplication {
 
-    public static void main(String[] args) {
+    public static void main(final String[] args) {
         SpringApplication.run(MediscreenAbernathyNotesApplication.class, args);
     }
 

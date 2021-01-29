@@ -26,6 +26,7 @@ public class ConstraintsValidator {
      * Method used to validate Note constraints.
      *
      * @param note
+     * @return note
      */
     public static Note checkValidPatient(final Note note) {
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();

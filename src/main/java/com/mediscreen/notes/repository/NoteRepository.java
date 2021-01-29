@@ -10,9 +10,8 @@ import com.mediscreen.notes.domain.Note;
 @Repository
 public interface NoteRepository extends MongoRepository<Note, String> {
 
-    List<Note> findByPatIdOrderByCreationDateDesc(final Long patId);
+    List<Note> findByPatIdOrderByCreationDateDesc(Long patId);
 
-    List<Note> findByLastNameAndFirstName(final String lastName,
-            final String firstName);
+    List<Note> findByLastNameAndFirstName(String lastName, String firstName);
 
 }
