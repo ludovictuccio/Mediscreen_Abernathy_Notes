@@ -2,7 +2,8 @@
 
 # Mediscreen_Abernathy - Notes
 
-OpenClassrooms - Project 9 / Mediscreen_Abernathy App - Notes
+OpenClassrooms - Project 9 <br/>
+Mediscreen_Abernathy App - Notes <br/>
 
 ---
 
@@ -14,14 +15,15 @@ For deploiement, please refer to Patient microservice readme: https://github.com
 
 - **With your IDE**: refer to **application.properties** to set valid proxies url
 
-- **With Docker**: the jar hosted on GitHub is for a Docker deployment ("localhost" changed with the Docker's image)
+- **With Docker**: the **application.properties** is written for the Docker deploiement. The Dockerfile will build the microservice and run the jar to run it.
 
 ## For Docker deploiement:
 
 1. Install Docker Desktop: <br/>
 https://docs.docker.com/docker-for-windows/ or https://docs.docker.com/docker-for-mac/
 
-2. To use the **Dockerfile**, you must run on the package root: 
+2. The **Dockerfile** will build the microservice and run the jar to run it. <br/>
+To use it, you must run on the package root: 
 - `docker build -t mediscreen-notes .`
 - `docker run -d -p 8082:8082 mediscreen-notes`
 
