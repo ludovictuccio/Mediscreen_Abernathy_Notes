@@ -1,0 +1,4 @@
+com\mediscreen\notes\controllers\api\NoteControllerApiRestIT.class
+com\mediscreen\notes\services\NoteServiceTest.class
+com\mediscreen\notes\repository\NoteRepositoryTest.class
+com\mediscreen\notes\controllers\NoteControllerIT.class

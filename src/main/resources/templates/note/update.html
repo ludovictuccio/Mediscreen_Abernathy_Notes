@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="utf-8"/>
+	<title>Update note</title>
+	<link rel="stylesheet" href="../../css/bootstrap.min.css" >
+</head>
+<body>
+<div class="container">
+
+	<div class="row">
+		<h2>Update a note</h2>
+	</div>
+
+	<div class="row">
+		<form action="#" th:action="@{/note/update/{id}(id=${note.id})}" th:object="${note}" method="post" class="form-horizontal" style="width: 100%">
+			
+			<div class="form-group" >
+				<label for="note" class="col-sm-2 control-label">Notes</label>
+				<div class="col-sm-12 col-m-12 " >
+					<textarea class="form-control" th:field="*{note}" id="note" placeholder="note"rows="20"></textarea>   
+					<p class="text-danger" th:if="${#fields.hasErrors('note')}" th:errors="*{note}"></p>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<div class="col-sm-12">
+					<input type="hidden" th:field="*{id}">
+					<a class="btn btn-danger btn-sm" th:href="@{/note/list?lastName={lastName}&firstName={firstName}(lastName=${note.lastName},firstName=${note.firstName})}">Cancel</a>										
+					<input class="btn btn-primary btn-sm" type="submit" value="Update Notes">
+				</div>
+			</div>
+
+		</form>
+	</div>
+</div>
+</body>
+</html>

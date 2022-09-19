@@ -1,0 +1,56 @@
+[
+{
+"creationDate":"2021-01-01",
+"patId":1,
+"patientLastname": "TestNone",
+"note": "Patient states that they are 'feeling terrific' Weight at or below recommended level"
+},
+{
+"creationDate":"2017-01-01",
+"patId":2,
+"patientLastname": "TestBorderline",
+"note": "Patient states that they are feeling a great deal of stress at work Patient also complains that their hearing seems Abnormal as of late"
+},
+{
+"creationDate":"2020-01-01",
+"patId":2,
+"patientLastname": "TestBorderline",
+"note": "Patient states that they have had a Reaction to medication within last 3 months Patient also complains that their hearing continues to be problematic"
+},
+{
+"creationDate":"2019-01-01",
+"patId":3,
+"patientLastname": "TestInDanger",
+"note": "Patient states that they are short term Smoker"
+},
+{
+"creationDate":"2021-01-01",
+"patId":3,
+"patientLastname": "TestInDanger",
+"note": "Patient states that they quit within last year Patient also complains that of Abnormal breathing spells Lab reports Cholesterol LDL high"
+},
+{
+"creationDate":"2010-01-01",
+"patId":4,
+"patientLastname": "TestEarlyOnset",
+"note": "Patient states that walking up stairs has become difficult Patient also complains that they are having shortness of breath Lab results indicate Antibodies present elevated Reaction to medication"
+},
+{
+"creationDate":"2015-01-01",
+"patId":4,
+"patientLastname": "TestEarlyOnset",
+"note": "Patient states that they are experiencing back pain when seated for a long time"
+},
+{
+"creationDate":"2017-01-01",
+"patId":4,
+"patientLastname": "TestEarlyOnset",
+"note": "Patient states that they are a short term Smoker Hemoglobin A1C above recommended level"
+},
+{
+"creationDate":"2020-01-01",
+"patId":4,
+"patientLastname": "TestEarlyOnset",
+"note": "Patient states that Body Height, Body Weight, Cholesterol, Dizziness and Reaction"
+}
+]
